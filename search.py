@@ -41,7 +41,7 @@ else:
     skillsPrompt=f"{skills} skills"
 
 if st.sidebar.button("Search"):
-    prompt=f"Provide all resumes matching {skillsPrompt} {levelPrompt}. Generate detailed information for each resume(Please specify a name of that resume).For skills, list them on a single row beside the skills title.Specify the total years of experience based on the work experience history provided in the resume"
+    prompt=f"Provide all resumes matching {skillsPrompt} {levelPrompt}. Generate detailed information for each resume(Please specify a name of each resume).For skills, list them on a single row beside the skills title.Specify the total years of experience based on the work experience history provided in the resume"
     st.write(prompt)
 
 
