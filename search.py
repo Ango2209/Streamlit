@@ -16,9 +16,6 @@ skills= st.sidebar.multiselect(
 st.sidebar.subheader('Level')
 level = st.sidebar.selectbox('Filter by Level', ("All Level",'Entry',"Fresher", "Senior",'Project Manager',"Junior","Business Analyst","Full Stack","AI","Director"))
 
-st.sidebar.subheader('Year of Experiences')
-experienced = st.sidebar.selectbox('Filter by Year Of Experienced', ('1', '2',"3",'4',"5","6","Above All"))
-
 API_URL = "http://13.214.164.179:3000/api/v1/prediction/5f411a49-8fa2-4302-afda-1380dc3ae72f"
 # Plotting the bar chart
 
@@ -79,7 +76,6 @@ if prompt:
     output = query_message({'question': prompt})
     text = output.get("text", "")
     render_bar_chart(text)
-
     st.write(text)  
 
 
