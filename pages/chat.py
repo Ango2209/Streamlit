@@ -23,17 +23,16 @@ for message in st.session_state.messages:
         
 def render_bar_chart(text):
     skills_pattern = r"Skills:\s*(.+?)\n"
-    # Extract skills using regular expression
-    skills_match = re.findall(skills_pattern, text)
-    # Process the matched skills
-    skills_list = []
-    for skills_block in skills_match:
-        skills_list.extend(re.findall(r"(\w+)", skills_block))
-    # Create the object with extracted skills
-    skills_object = {"skills": skills_list}
-    # Display the object containing skills
+    skills_match = re.search(skills_pattern, text, re.DOTALL)
+    
+    if skills_match:
+       skills = skills_match.group(1).split(', ')
+    else:
+       skills = []
+    skills_object = {"skills": skills}
     print(skills_object)
     df = pd.DataFrame(skills_object)
+
     if skills_object['skills']:
         print("oks")
         language_counts = df['skills'].value_counts().reset_index()

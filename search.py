@@ -29,34 +29,44 @@ st.title("ResumeQueryGenius")
 prompt=""
 
 
-if level == "All Level":
-    levelPrompt = ""
-else:
-    levelPrompt=f"at {level} position"
-    
-
-if skills == []:
-    skillsPrompt = ""
-else:
-    skillsPrompt=f"{skills} skills"
+levelPrompt = f"at {level} position" if level != "All Level" else ""
+skillsPrompt = ", ".join(skills) + "" if skills else ""
 
 if st.sidebar.button("Search"):
-    prompt=f"Provide all resumes matching {skillsPrompt} {levelPrompt}. Generate detailed information for each candidate(Please specify a name of each candidate).For skills, list them on a single row beside the skills title.list work experience of each candidate and specify the total years of experience based on the work experience history provided in the resume(current year is 2024)"
-    st.write(prompt)
+    prompt = (
+    "Please provide resumes matching the following criteria:\n"
+    f"- Desired Skills: {skillsPrompt} at {levelPrompt}.\n"
+    "For each candidate:\n"
+    "- Specify the candidate's name, personal contact details, work experience, and skills.\n"
+    "- Include their work experience, specifying the total years based on provided history (assuming the current year is 2024).\n"
+    "Generate a candidate profile in the following format:\n\n"
+    " Candidate: [Candidate's Name] \n"
+    "- Contact: [Candidate's Email], [Candidate's Phone Number], [Candidate's Location]\n"
+    "- Work Experience: - [Company Name], [Job Title], [Location] | [Years of Experience] years\n"
+    "                 [Additional Work Experience if applicable]\n"
+    "- Total Year of Experience: [Total Years of Experience] years\n"
+    "- Skills: [List of all Skills of this candidate separated by commas]\n"
+    "- Example:\n"
+    "- Name: Coleman Guthrie\n"
+    "- Contact: cole.guthrie@email.com, (123) 456-7890, San Francisco, CA\n"
+    "- Work Experience: Genovice, IT Project Manager, San Francisco, CA | 5 years\n"
+    "- Federal Reserve Bank of Boston, IT Project Manager, San Francisco, CA | 5 years\n"
+    "- Skills: Server Maintenance, SQL, APIs, CRM, Microsoft 365, Programming Languages: C++, Java, Python, Project Management, Data Analysis\n"
+    )
+
 
 
 def render_bar_chart(text):
-    skills_pattern = r"Skills:\s*(.+?)\n\n"
-    # Extract skills using regular expression
-    skills_match = re.findall(skills_pattern, text)
-    # Process the matched skills
+    skills_pattern = r"Skills:\s*(.+?)(?:Candidate|$)"
+    skills_match = re.findall(skills_pattern, text, re.DOTALL)
     skills_list = []
+
     for skills_block in skills_match:
-        skills_list.extend(re.findall(r"(\w+)", skills_block))
-    # Create the object with extracted skills
+       skills_list.extend(re.findall(r"(\w+(?:\s+\w+)*)", skills_block))
     skills_object = {"skills": skills_list}
-    # Display the object containing skills
+
     print(skills_object)
+
     df = pd.DataFrame(skills_object)
     if skills_object['skills']:
         language_counts = df['skills'].value_counts().reset_index()
@@ -73,13 +83,15 @@ def render_bar_chart(text):
         st.altair_chart(chart, use_container_width=True)
 
 if prompt:
-    output = query_message({'question': prompt})
-    text = output.get("text", "")
-    render_bar_chart(text)
-    st.write(text)  
-
-
-
-
+    with st.spinner("## Loading..."):
+        output = query_message({'question': prompt})
+        text = output.get("text", "")
+        if text:
+            render_bar_chart(text)
+            st.write(text)
+        else:
+            st.write("No results found.")
+else:
+   st.write("## Query something..")
 
 
