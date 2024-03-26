@@ -36,6 +36,8 @@ if st.sidebar.button("Search"):
     prompt = (
     "Please provide resumes matching the following criteria:\n"
     f"- Desired Skills: {skillsPrompt} at {levelPrompt}.\n"
+    "For each candidate, ensure they possess the required skills or position.\n"
+    "If a candidate does not meet the criteria, please exclude them from consideration."
     "For each candidate:\n"
     "- Specify the candidate's name, personal contact details, work experience, and skills.\n"
     "- Include their work experience, specifying the total years based on provided history (assuming the current year is 2024).\n"
@@ -53,6 +55,7 @@ if st.sidebar.button("Search"):
     "- Federal Reserve Bank of Boston, IT Project Manager, San Francisco, CA | 5 years\n"
     "- Skills: Server Maintenance, SQL, APIs, CRM, Microsoft 365, Programming Languages: C++, Java, Python, Project Management, Data Analysis\n"
     )
+    st.write(prompt)
 
 
 
