@@ -29,13 +29,21 @@ st.title("ResumeQueryGenius")
 prompt=""
 
 
-levelPrompt = f"at {level} position" if level != "All Level" else ""
+levelPrompt = f"{level} position" if level != "All Level" else ""
 skillsPrompt = ", ".join(skills) + "" if skills else ""
 
 if st.sidebar.button("Search"):
     prompt = (
-    "Please provide resumes matching the following criteria:\n"
-    f"- Desired Skills: {skillsPrompt} at {levelPrompt}.\n"
+    "Please provide resumes matching the following criteria:\n")
+    if skillsPrompt and levelPrompt:
+        prompt += f"- Desired Skills: {skillsPrompt} at {levelPrompt}.\n"
+    elif skillsPrompt:
+        prompt += f"- Desired Skills: {skillsPrompt}.\n"
+    elif levelPrompt:
+        prompt += f"- Desired Level: {levelPrompt}.\n"
+    else:
+        prompt += "- No specific skills or level specified.\n"
+    prompt += (
     "For each candidate, ensure they possess the required skills or position.\n"
     "If a candidate does not meet the criteria, please exclude them from consideration."
     "For each candidate:\n"
@@ -44,10 +52,12 @@ if st.sidebar.button("Search"):
     "Generate a candidate profile in the following format:\n\n"
     " Candidate: [Candidate's Name] \n"
     "- Contact: [Candidate's Email], [Candidate's Phone Number], [Candidate's Location]\n"
-    "- Work Experience: - [Company Name], [Job Title], [Location] | [Years of Experience] years\n"
-    "                 [Additional Work Experience if applicable]\n"
-    "- Total Year of Experience: [Total Years of Experience] years\n"
-    "- Skills: [List of all Skills of this candidate separated by commas]\n"
+    "- Work Experience:\n"
+        " Please list all work experiences in the following format for each:\n"
+        " - [Company Name], [Job Title], [Location] | [Years of Experience] years\n"
+        "[Additional Work Experience if applicable]\n"
+    "- Total Year of Experience: [Total Years of Experience] years\n" 
+    "- Skills: [Please provide a comprehensive list of all skills possessed by the candidate, separated by commas.]\n"
     "- Example:\n"
     "- Name: Coleman Guthrie\n"
     "- Contact: cole.guthrie@email.com, (123) 456-7890, San Francisco, CA\n"
@@ -55,7 +65,7 @@ if st.sidebar.button("Search"):
     "- Federal Reserve Bank of Boston, IT Project Manager, San Francisco, CA | 5 years\n"
     "- Skills: Server Maintenance, SQL, APIs, CRM, Microsoft 365, Programming Languages: C++, Java, Python, Project Management, Data Analysis\n"
     )
-    st.write(prompt)
+
 
 
 
